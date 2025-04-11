@@ -9,8 +9,18 @@
 <body>
   <div class="container" id="loginScreen">
     <h1>Günlüğümüz 💌</h1>
-    <input type="text" id="username" placeholder="Kullanıcı adın" />
+    <input type="text" id="loginUsername" placeholder="Kullanıcı adın" />
+    <input type="password" id="loginPassword" placeholder="Şifren" />
     <button onclick="login()">Giriş Yap</button>
+    <p>Hesabın yok mu? <a href="#" onclick="showRegister()">Kayıt ol</a></p>
+  </div>
+
+  <div class="container" id="registerScreen" style="display:none;">
+    <h1>Yeni Hesap Oluştur</h1>
+    <input type="text" id="username" placeholder="Kullanıcı adın" />
+    <input type="password" id="password" placeholder="Şifren" />
+    <button onclick="register()">Kayıt Ol</button>
+    <p>Zaten hesabın var mı? <a href="#" onclick="showLogin()">Giriş yap</a></p>
   </div>
 
   <div class="container" id="appScreen" style="display:none;">
