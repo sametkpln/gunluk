@@ -15,9 +15,26 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
   
-  h1, h2 {
+  h1 {
     text-align: center;
     color: #d63384;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #d63384;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
   }
   
   textarea {
@@ -28,6 +45,13 @@ body {
     border: 1px solid #ccc;
     font-size: 16px;
     resize: none;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  
+  input[type="file"] {
+    width: 100%;
+    margin: 8px 0;
   }
   
   button {
@@ -48,8 +72,39 @@ body {
   
   .entry {
     background: #ffeaf2;
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
   
+  .entry small {
+    display: block;
+    color: #888;
+    margin-bottom: 5px;
+  }
+  
+  .entry img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  
+  p {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  a {
+    color: #d63384;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  #welcome {
+    text-align: center;
+    color: #d63384;
+    margin-bottom: 20px;
+  }
