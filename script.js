@@ -10,60 +10,64 @@ function showLogin() {
   document.getElementById("loginScreen").style.display = "block";
 }
 
-function register() {
+async function register() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   if (!username || !password) return alert("Tüm alanlar gerekli!");
 
-  // Kullanıcıları yerel depolamadan al
-  let users = [];
   try {
-    users = JSON.parse(localStorage.getItem('users')) || [];
-  } catch (e) {
-    users = [];
+    const response = await fetch('/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
+      showLogin();
+    } else {
+      alert(data.message || "Kayıt işlemi başarısız.");
+    }
+  } catch (error) {
+    alert("Bir hata oluştu: " + error.message);
   }
-
-  // Kullanıcı zaten var mı kontrol et
-  if (users.some(user => user.username === username)) {
-    return alert("Bu kullanıcı adı zaten kullanılıyor!");
-  }
-
-  // Yeni kullanıcı ekle
-  users.push({ username, password });
-  localStorage.setItem('users', JSON.stringify(users));
-  
-  alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
-  showLogin();
 }
 
-function login() {
+async function login() {
   const username = document.getElementById("loginUsername").value.trim();
   const password = document.getElementById("loginPassword").value.trim();
   if (!username || !password) return alert("Tüm alanlar gerekli!");
 
-  // Kullanıcıları yerel depolamadan al
-  let users = [];
   try {
-    users = JSON.parse(localStorage.getItem('users')) || [];
-  } catch (e) {
-    users = [];
-  }
-
-  // Kullanıcıyı ve şifreyi kontrol et
-  const user = users.find(user => user.username === username && user.password === password);
-  
-  if (user) {
-    currentUser = username;
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("appScreen").style.display = "block";
-    document.getElementById("welcome").textContent = `${username}'nin Günlüğü`;
-    loadEntries();
-  } else {
-    alert("Kullanıcı adı veya şifre hatalı!");
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      currentUser = username;
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("appScreen").style.display = "block";
+      document.getElementById("welcome").textContent = `${username}'nin Günlüğü`;
+      loadEntries();
+    } else {
+      alert(data.message || "Kullanıcı adı veya şifre hatalı!");
+    }
+  } catch (error) {
+    alert("Bir hata oluştu: " + error.message);
   }
 }
 
-function saveEntry() {
+async function saveEntry() {
   const entryText = document.getElementById("entry").value.trim();
   const imageInput = document.getElementById("imageInput");
   if (!entryText) return alert("Bir şeyler yazmalısın!");
@@ -71,14 +75,16 @@ function saveEntry() {
   // Tarih formatı için
   const now = new Date();
   const dateStr = now.toLocaleDateString('tr-TR') + " " + 
-                  now.getHours().toString().padStart(2, '0') + ":" + 
-                  now.getMinutes().toString().padStart(2, '0');
+                now.getHours().toString().padStart(2, '0') + ":" + 
+                now.getMinutes().toString().padStart(2, '0');
 
-  const reader = new FileReader();
-  reader.onload = function () {
-    const imageBase64 = imageInput.files[0] ? reader.result : null;
+  try {
+    let imageBase64 = null;
+    
+    if (imageInput.files[0]) {
+      imageBase64 = await readFileAsDataURL(imageInput.files[0]);
+    }
 
-    // Yerel depolama için giriş nesnesini oluştur
     const entry = {
       username: currentUser,
       text: entryText,
@@ -86,59 +92,58 @@ function saveEntry() {
       date: dateStr
     };
 
-    // Mevcut kayıtları al
-    let entries = [];
-    try {
-      entries = JSON.parse(localStorage.getItem('entries')) || [];
-    } catch (e) {
-      entries = [];
+    const response = await fetch('/saveEntry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(entry)
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Formu temizle
+      document.getElementById("entry").value = "";
+      imageInput.value = "";
+      
+      // Girişleri yeniden yükle
+      loadEntries();
+    } else {
+      alert(data.message || "Kayıt eklenirken bir hata oluştu.");
     }
-
-    // Yeni girişi ekle
-    entries.push(entry);
-    
-    // Güncellenmiş girişleri kaydet
-    localStorage.setItem('entries', JSON.stringify(entries));
-
-    // Formu temizle
-    document.getElementById("entry").value = "";
-    imageInput.value = "";
-    
-    // Girişleri yeniden yükle
-    loadEntries();
-  };
-
-  if (imageInput.files[0]) {
-    reader.readAsDataURL(imageInput.files[0]);
-  } else {
-    reader.onload(); // görsel yoksa da çalış
+  } catch (error) {
+    alert("Bir hata oluştu: " + error.message);
   }
 }
 
-function loadEntries() {
-  // Yerel depolamadan girişleri al
-  let entries = [];
-  try {
-    entries = JSON.parse(localStorage.getItem('entries')) || [];
-  } catch (e) {
-    entries = [];
-  }
-
-  // Sadece mevcut kullanıcının girişlerini filtrele
-  const userEntries = entries
-    .filter(entry => entry.username === currentUser)
-    .sort((a, b) => new Date(b.date) - new Date(a.date)); // En yeni en üstte
-
-  const container = document.getElementById("entries");
-  container.innerHTML = "";
-
-  userEntries.forEach(entry => {
-    const div = document.createElement("div");
-    div.className = "entry";
-    div.innerHTML = `<small>${entry.date}</small><p>${entry.text}</p>`;
-    if (entry.image) {
-      div.innerHTML += `<img src="${entry.image}" alt="Günlük görseli">`;
-    }
-    container.appendChild(div);
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
+}
+
+async function loadEntries() {
+  try {
+    const response = await fetch(`/entries/${currentUser}`);
+    const userEntries = await response.json();
+
+    const container = document.getElementById("entries");
+    container.innerHTML = "";
+
+    userEntries.forEach(entry => {
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `<small>${entry.date}</small><p>${entry.text}</p>`;
+      if (entry.image) {
+        div.innerHTML += `<img src="${entry.image}" alt="Günlük görseli">`;
+      }
+      container.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Girişler yüklenirken hata oluştu:", error);
+  }
 }
