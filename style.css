@@ -1,110 +1,121 @@
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #fff5f8;
-    color: #333;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  h1 {
-    text-align: center;
-    color: #d63384;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #d63384;
-    margin-top: 30px;
-    margin-bottom: 20px;
-  }
-  
-  input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    font-size: 16px;
-  }
-  
-  textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    resize: none;
-    margin: 8px 0;
-    box-sizing: border-box;
-  }
-  
-  input[type="file"] {
-    width: 100%;
-    margin: 8px 0;
-  }
-  
-  button {
-    display: block;
-    margin: 15px auto;
-    padding: 10px 20px;
-    background-color: #d63384;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #c2186a;
-  }
-  
-  .entry {
-    background: #ffeaf2;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .entry small {
-    display: block;
-    color: #888;
-    margin-bottom: 5px;
-  }
-  
-  .entry img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-top: 8px;
-  }
-  
-  p {
-    text-align: center;
-    margin-top: 15px;
-  }
-  
-  a {
-    color: #d63384;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  #welcome {
-    text-align: center;
-    color: #d63384;
-    margin-bottom: 20px;
-  }
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff5f8;
+  background-image: url('arkaplan.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #333;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;  /* alta yasla */
+  align-items: center;        /* ortaya hizala */
+  min-height: 100vh;          /* tüm ekran boyu */
+}
+
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #d63384;
+}
+
+h2 {
+  text-align: center;
+  color: #d63384;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: none;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+input[type="file"] {
+  width: 100%;
+  margin: 8px 0;
+}
+
+button {
+  display: block;
+  margin: 15px auto;
+  padding: 10px 20px;
+  background-color: #d63384;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c2186a;
+}
+
+.entry {
+  background: #ffeaf2;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.entry small {
+  display: block;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.entry img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+p {
+  text-align: center;
+  margin-top: 15px;
+}
+
+a {
+  color: #d63384;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#welcome {
+  text-align: center;
+  color: #d63384;
+  margin-bottom: 20px;
+}
