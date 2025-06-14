@@ -1,12 +1,29 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
+const cors = require('cors');
+
 const app = express();
 const PORT = 3000;
 
-// JSON veri boyutu sınırını artır (resimler için)
 app.use(express.json({ limit: '50mb' }));
+app.use(cors());
 app.use(express.static(path.join(__dirname, '.')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Uploads klasörünü erişilebilir yap
+
+// Uploads klasörünün varlığını kontrol et, yoksa oluştur
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
+
+// Resimlerin kaydedileceği yeri ve dosya ismini belirleyelim
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'), // Yüklenen resimler burada kaydedilecek
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)) // Benzersiz isim veriyoruz
+});
+
+const upload = multer({ storage });
 
 // Dosyaların varlığını kontrol et, yoksa oluştur
 function ensureFileExists(filename, defaultContent = '[]') {
@@ -83,9 +100,19 @@ app.post('/login', (req, res) => {
   }
 });
 
+// --- Resim yükleme endpoint'i ---
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'Resim yüklenmedi.' });
+  }
+
+  const imageUrl = `/uploads/${req.file.filename}`;
+  res.json({ success: true, imageUrl });
+});
+
 // --- Kayıt ekleme endpoint'i ---
-app.post('/saveEntry', (req, res) => {
-  const { username, text, image, date } = req.body;
+app.post('/saveEntry', upload.single('image'), (req, res) => {
+  const { username, text, date } = req.body;
   
   if (!username || !text) {
     return res.status(400).json({ 
@@ -101,7 +128,18 @@ app.post('/saveEntry', (req, res) => {
     entries = [];
   }
   
-  entries.push({ username, text, image, date });
+  let imagePath = null;
+  if (req.file) {
+    imagePath = `/uploads/${req.file.filename}`;
+  }
+  
+  entries.push({ 
+    username, 
+    text, 
+    image: imagePath, 
+    date: date || new Date().toLocaleString('tr-TR') 
+  });
+  
   fs.writeFileSync('entries.json', JSON.stringify(entries, null, 2));
   
   res.json({ success: true });
@@ -125,6 +163,7 @@ app.get('/entries/:username', (req, res) => {
   res.json(userEntries);
 });
 
+// Sunucuyu başlat
 app.listen(PORT, () => {
   console.log(`Sunucu çalışıyor: http://localhost:${PORT}`);
 });

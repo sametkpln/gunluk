@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "username": "samet",
+    "text": "a",
+    "image": "/uploads/1744573811626.jpg",
+    "date": "13.04.2025 22:50"
+  },
+  {
+    "username": "bennu",
+    "text": "deneme",
+    "image": null,
+    "date": "13.04.2025 23:27"
+  }
+]

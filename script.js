@@ -79,25 +79,18 @@ async function saveEntry() {
                 now.getMinutes().toString().padStart(2, '0');
 
   try {
-    let imageBase64 = null;
+    const formData = new FormData();
+    formData.append('username', currentUser);
+    formData.append('text', entryText);
+    formData.append('date', dateStr);
     
     if (imageInput.files[0]) {
-      imageBase64 = await readFileAsDataURL(imageInput.files[0]);
+      formData.append('image', imageInput.files[0]);
     }
-
-    const entry = {
-      username: currentUser,
-      text: entryText,
-      image: imageBase64,
-      date: dateStr
-    };
 
     const response = await fetch('/saveEntry', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(entry)
+      body: formData
     });
     
     const data = await response.json();
@@ -115,15 +108,6 @@ async function saveEntry() {
   } catch (error) {
     alert("Bir hata oluştu: " + error.message);
   }
-}
-
-function readFileAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
 }
 
 async function loadEntries() {
